@@ -21,7 +21,8 @@ defmodule Day1 do
       end)
     IO.puts("Final position: #{pos}")
     IO.puts("Number of 0s: #{num0}")
-    IO.puts("Number of crosses: #{num0 + cross0}")
+    IO.puts("Number of crosses: #{cross0}")
+    IO.puts("Total (0s + crosses): #{num0 + cross0}")
   end
 
   defp find_crosses(_pos, 0), do: 0
@@ -29,19 +30,16 @@ defmodule Day1 do
   defp find_crosses(pos, delta) do
     loops = div(abs(delta), @size)
     remainder = rem(delta, @size)
+    nsum = pos + remainder
     extra =
       cond do
-        remainder > 0 and pos + remainder >= @size -> 1
-        remainder < 0 and pos > 0 and pos + remainder <= 0 -> 1
+        # Positive: wraps around or lands on zero with no loops
+        nsum > @size or (loops == 0 and nsum == @size) -> 1
+        # Negative: wraps around or lands on zero with no loops
+        nsum < 0 or (loops == 0 and nsum == 0 and pos > 0) -> 1
         true -> 0
       end
-    total_crosses = loops + extra
-    new_pos = Integer.mod(pos + delta, @size)
-    if new_pos == 0 do
-      total_crosses - 1
-    else
-      total_crosses
-    end
+    loops + extra
   end
 end
 
