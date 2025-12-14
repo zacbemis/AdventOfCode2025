@@ -33,9 +33,7 @@ defmodule Day1 do
     nsum = pos + remainder
     extra =
       cond do
-        # Positive: wraps around or lands on zero with no loops
         nsum > @size or (loops == 0 and nsum == @size) -> 1
-        # Negative: wraps around or lands on zero with no loops
         nsum < 0 or (loops == 0 and nsum == 0 and pos > 0) -> 1
         true -> 0
       end
